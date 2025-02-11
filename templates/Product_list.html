@@ -1,0 +1,75 @@
+<!-- Product_list.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Crafted Frame - Product Listing</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="https://kit.fontawesome.com/02d5b0e4aa.js" crossorigin="anonymous"></script>
+</head>
+<body data-logged-in="{% if request.user.is_authenticated %}true{% else %}false{% endif %}">
+
+    <header>
+        <h1>The Crafted Frame</h1>
+        <div class="header-icons">
+            <form method="GET" action="{% url 'collections' %}">
+                <input type="text" name="q" placeholder="Search..." value="{{ query }}">
+                <button type="submit">Search</button>
+            </form>
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <p>{{ request.user.first_name }} {{ request.user.last_name }}</p>
+            {% else %}
+                <a href="{% url 'login' %}?next={{ request.path }}"><i class="fas fa-user"></i> Login</a>
+            {% endif %}
+            <a href="{% url 'cart_view' %}"><i class="fas fa-shopping-cart"></i></a>  
+        </div>
+    </header>
+
+    <main>
+        <ul class="category-list">  
+            <li><a href="#">DSLR</a></li>
+            <li><a href="#">Mirrorless</a></li>
+            <li><a href="#">Point & Shoot</a></li>
+            <li><a href="#">Digital Cinema Camera</a></li>
+        </ul>
+
+        <div class="product-area">
+            <aside class="sidebar">
+                <h2>Filters</h2>
+                <div class="filter-section">
+                    <h3>Brands</h3>
+                    <!-- {% for i in br}
+                    <label><input type="checkbox"></label> -->
+                    <label><input type="checkbox"> Nikon</label>
+                    <label><input type="checkbox"> Canon</label>
+                    <label><input type="checkbox"> Sony</label>
+                </div>
+            </aside>
+
+            <section class="product-list">
+                {% for i in cr %}
+                    <div class="product-item">
+                        <img src="{{ i.image.url }}" alt="{{ i.name }}">
+                        <h2>{{i.brand}}</h2>
+                        <h3>{{ i.name }}</h3>
+                        <p class="price">${{ i.price }}</p>
+                        <div class="product-actions">
+                            <form action="{% url 'add_to_cart' i.id %}" method="GET">
+                                <button type="submit" class="add-to-cart">Add to Cart</button>
+                            </form>
+                            <button class="buy-now" data-product-id="{{ i.id }}">Buy Now</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </section>
+            
+        </div>
+    </main>
+
+    <script src="{% static 'js/auth-check.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!-- checkout.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - The Crafted Frame</title>
+    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Checkout</h1>
+    </header>
+
+    <main>
+        <h2>Review Your Order</h2>
+        <p>Total Amount: ${{ total_price }}</p>
+
+        <form action="{% url 'checkout' %}" method="POST">
+            {% csrf_token %}
+            <label for="address">Shipping Address:</label>
+            <textarea id="address" name="address" required></textarea>
+
+            <label for="payment">Payment Method:</label>
+            <select id="payment" name="payment">
+                <option value="card">Credit/Debit Card</option>
+                <option value="paypal">PayPal</option>
+                <option value="cod">Cash on Delivery</option>
+            </select>
+
+            <button type="submit">Place Order</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 The Crafted Frame. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
