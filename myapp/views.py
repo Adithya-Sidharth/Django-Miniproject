@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout, authenticate, login
 from .models import Products, Brand, Cart
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 
@@ -95,12 +95,23 @@ def update_quantity(request, item_id, action):
     return redirect('cart_view')
 
 
+@login_required
 def checkout(request):
-    if request.method == "POST":
-        # Here, you can add order processing logic (saving to DB, payment integration, etc.)
-        return render(request, 'order_confirmation.html')  # Redirect to order confirmation page
+    cart_items = Cart.objects.filter(user=request.user)
 
-    return render(request, 'checkout.html')
+    # Compute total price for each item
+    for item in cart_items:
+        item.total_price = item.product.price * item.quantity
+
+    total_price = sum(item.total_price for item in cart_items)
+
+    if request.method == "POST":
+        # Place order logic, but no actual order saving yet
+        messages.success(request, "The order is placed successfully!")
+        return redirect('collections')  # Redirect to collections or confirmation page after checkout
+
+    return render(request, 'checkout.html', {'total_price': total_price})
+
 
 @login_required
 def remove_from_cart(request, item_id):

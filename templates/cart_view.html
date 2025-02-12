@@ -1,4 +1,3 @@
-<!-- cart_view.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -43,9 +42,9 @@
                                         {% csrf_token %}
                                         <button type="submit">-</button>
                                     </form>
-                                
+                                    
                                     <span>{{ item.quantity }}</span>
-                                
+                                    
                                     <form action="{% url 'update_quantity' item.id 'increase' %}" method="POST" style="display:inline;">
                                         {% csrf_token %}
                                         <button type="submit">+</button>
@@ -76,6 +75,5 @@
     <footer>
         <p>&copy; 2025 The Crafted Frame. All Rights Reserved.</p>
     </footer>
-
 </body>
 </html>
