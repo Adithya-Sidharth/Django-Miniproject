@@ -14,6 +14,7 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),  
     path('remove_from_cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('update_quantity/<int:item_id>/<str:action>/', views.update_quantity, name='update_quantity'),
+    path('purchase-history/', views.purchase_history, name='purchase_history'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

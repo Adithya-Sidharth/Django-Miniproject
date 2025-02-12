@@ -1,7 +1,7 @@
 # views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout, authenticate, login
-from .models import Products, Brand, Cart
+from .models import Products, Cart, Order, OrderItem
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -106,7 +106,16 @@ def checkout(request):
     total_price = sum(item.total_price for item in cart_items)
 
     if request.method == "POST":
-        # Place order logic, but no actual order saving yet
+        # Create an order
+        order = Order.objects.create(user=request.user)
+
+        # Create OrderItem objects for each cart item
+        for item in cart_items:
+            OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
+
+        # Clear the cart after placing the order
+        cart_items.delete()
+
         messages.success(request, "The order is placed successfully!")
         return redirect('collections')  # Redirect to collections or confirmation page after checkout
 
@@ -118,3 +127,12 @@ def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(Cart, id=item_id, user=request.user)
     cart_item.delete()
     return redirect('cart_view')
+
+@login_required
+def purchase_history(request):
+    orders = Order.objects.filter(user=request.user).order_by('-date')  # Fetch orders in descending order of date
+    # Pre-calculate total price for each order item
+    for order in orders:
+        for item in order.order_items.all():
+            item.total_price = item.product.price * item.quantity
+    return render(request, 'purchase_history.html', {'orders': orders})

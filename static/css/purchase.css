@@ -1,0 +1,100 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Header */
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header a {
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+    margin-left: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+header a:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Main Content */
+main {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Order History Box */
+.order-history {
+    background: #ffffff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border-left: 5px solid #007bff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.order-history h2 {
+    color: #007bff;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+/* Order Items List */
+.order-history ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.order-history li {
+    background: #f1f1f1;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Product Details (Left) */
+.order-item-details {
+    flex: 1;
+    padding-right: 15px;
+}
+
+/* Product Image (Right) */
+.order-item-image {
+    width: 150px; /* Set the width to a reasonable value */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 5px;
+}
+
+/* Empty History Message */
+p {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+}

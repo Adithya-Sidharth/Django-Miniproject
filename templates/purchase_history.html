@@ -1,0 +1,47 @@
+<!-- purchase_history.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase History</title>
+    <link rel="stylesheet" href="{% static 'css/purchase.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Purchase History</h1>
+        <a href="{% url 'collections' %}">Back to Shop</a>
+    </header>
+
+    <main>
+        {% if orders %}
+            {% for order in orders %}
+                <div class="order-history">
+                    <h2>Order Date: {{ order.date }}</h2>
+                    <ul>
+                        {% for item in order.order_items.all %}
+                            <li>
+                                <div class="order-item">
+                                    <div class="order-item-details">
+                                        <strong>{{ item.product.name }}</strong><br>
+                                        <span>Category: {{ item.product.category.name }}</span><br>
+                                        <span>Brand: {{ item.product.brand.name }}</span><br>
+                                        <span>Price: ${{ item.product.price }}</span><br>
+                                        <span>Quantity: {{ item.quantity }}</span><br>
+                                        <span>Total Price: ${{ item.total_price }}</span>
+                                    </div>
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="order-item-image">
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No purchase history available.</p>
+        {% endif %}
+    </main>
+
+</body>
+</html>

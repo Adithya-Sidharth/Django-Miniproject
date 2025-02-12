@@ -49,3 +49,18 @@ class Cart(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.product.name} - {self.quantity}"
+    
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Order {self.id} - {self.user.username} - {self.date}"
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name='order_items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.product.name} - Quantity: {self.quantity}"
