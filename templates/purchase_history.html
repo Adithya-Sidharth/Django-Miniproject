@@ -18,7 +18,7 @@
         {% if orders %}
             {% for order in orders %}
                 <div class="order-history">
-                    <h2>Order Date: {{ order.date }}</h2>
+                    <h2>Order Date: {{ order.date|date:"Y-m-d H:i:s" }}</h2>
                     <ul>
                         {% for item in order.order_items.all %}
                             <li>
@@ -36,6 +36,8 @@
                             </li>
                         {% endfor %}
                     </ul>
+                    <!-- Invoice Download Button -->
+                    <a href="{% url 'generate_invoice' order.id %}" class="invoice-button">Download Invoice</a>
                 </div>
             {% endfor %}
         {% else %}

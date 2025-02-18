@@ -1,4 +1,6 @@
 # views.py
+from datetime import datetime
+from django.http import HttpResponse 
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout, authenticate, login
 from .models import Products, Cart, Order, OrderItem
@@ -6,6 +8,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
 def product_list(request):
     query = request.GET.get('q','')
@@ -136,3 +140,59 @@ def purchase_history(request):
         for item in order.order_items.all():
             item.total_price = item.product.price * item.quantity
     return render(request, 'purchase_history.html', {'orders': orders})
+
+@login_required
+def generate_invoice(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    
+    # Create a response object for PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="invoice_{order.id}.pdf"'
+
+    # Create a PDF document
+    p = canvas.Canvas(response, pagesize=letter)
+    width, height = letter
+
+    # Set title
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(200, height - 50, "Invoice")
+
+    # Order details
+    p.setFont("Helvetica", 12)
+
+    purchase_time = order.date.strftime('%Y-%m-%d %H:%M:%S')  # Format order date & time
+    invoice_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # Get current date & time
+
+    p.drawString(50, height - 100, f"Order ID: {order.id}")
+    p.drawString(50, height - 120, f"Purchase Date: {purchase_time}")  # Show purchase time
+    p.drawString(50, height - 140, f"Invoice Generated: {invoice_time}")  # Show invoice time
+    p.drawString(50, height - 160, f"Customer: {order.user.first_name} {order.user.last_name}")
+
+    # Table headers
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(50, height - 200, "Product")
+    p.drawString(250, height - 200, "Quantity")
+    p.drawString(350, height - 200, "Price")
+    p.drawString(450, height - 200, "Total")
+
+    y = height - 220  # Start position for items
+    total_price = 0
+
+    # Order items
+    for item in order.order_items.all():
+        p.setFont("Helvetica", 12)
+        p.drawString(50, y, item.product.name)
+        p.drawString(250, y, str(item.quantity))
+        p.drawString(350, y, f"${item.product.price}")
+        item_total = item.quantity * item.product.price
+        p.drawString(450, y, f"${item_total}")
+        y -= 20  # Move down for next item
+        total_price += item_total
+
+    # Total price
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(50, y - 20, f"Total Amount: ${total_price}")
+
+    p.showPage()
+    p.save()
+    return response
