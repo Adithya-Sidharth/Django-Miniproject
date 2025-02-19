@@ -20,9 +20,6 @@ def product_list(request):
 
     return render(request, 'Product_list.html', {'cr':cr, 'query':query})
 
-# def brand_list(request):
-#     br = 
-
 def reg(request):
     if request.method == "POST":
         first_name = request.POST.get('first_name')
@@ -72,6 +69,20 @@ def add_to_cart(request, product_id):
         Cart.objects.create(user=request.user, product=product)
 
     return redirect('collections')
+
+@login_required
+def checkout_single(request, product_id):
+    product = get_object_or_404(Products, id=product_id)
+
+    if request.method == "POST":
+        # Create a single-product order
+        order = Order.objects.create(user=request.user)
+        OrderItem.objects.create(order=order, product=product, quantity=1)
+
+        messages.success(request, "The order is placed successfully!")
+        return redirect('collections')  # Redirect after order placement
+
+    return render(request, 'checkout.html', {'total_price': product.price})
 
 @login_required
 def cart_view(request):

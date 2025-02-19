@@ -60,7 +60,7 @@
                             <form action="{% url 'add_to_cart' i.id %}" method="GET">
                                 <button type="submit" class="add-to-cart">Add to Cart</button>
                             </form>
-                            <button class="buy-now" data-product-id="{{ i.id }}">Buy Now</button>
+                            <a href="{% url 'checkout_single' i.id %}" class="buy-now">Buy Now</a>
                         </div>
                     </div>
                 {% endfor %}
