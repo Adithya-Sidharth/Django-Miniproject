@@ -145,7 +145,7 @@ def remove_from_cart(request, item_id):
 
 @login_required
 def purchase_history(request):
-    orders = Order.objects.filter(user=request.user).order_by('-date')  # Fetch orders in descending order of date
+    orders = Order.objects.filter(user=request.user).order_by('-date').prefetch_related('order_items__product__category', 'order_items__product__brand')  # Fetch orders in descending order of date
     # Pre-calculate total price for each order item
     for order in orders:
         for item in order.order_items.all():

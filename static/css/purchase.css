@@ -87,10 +87,12 @@ main {
 
 /* Product Image (Right) */
 .order-item-image {
-    width: 150px; /* Set the width to a reasonable value */
-    height: auto; /* Maintain aspect ratio */
+    width: 150px;
+    height: 150px;  /* Maintain square aspect ratio */
+    object-fit: cover;  /* Ensures the image covers the box */
     border-radius: 5px;
 }
+
 
 /* Empty History Message */
 p {
