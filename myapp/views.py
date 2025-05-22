@@ -3,22 +3,46 @@ from datetime import datetime
 from django.http import HttpResponse 
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout, authenticate, login
-from .models import Products, Cart, Order, OrderItem
+from .models import Products, Cart, Order, OrderItem, Category
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
+from django.urls import reverse
+
+
+def home(request):
+    return render(request, 'home.html')
 
 def product_list(request):
-    query = request.GET.get('q','')
-    if query:
-        cr = Products.objects.filter(name__icontains=query)
-    else:
-        cr = Products.objects.all()
+    query = request.GET.get('q', '')
+    category_name = request.GET.get('category', '')
+    selected_brands = request.GET.getlist('brand')  # 👈 Get selected brands as a list
 
-    return render(request, 'Product_list.html', {'cr':cr, 'query':query})
+    products = Products.objects.all()
+
+    if query:
+        products = products.filter(name__icontains=query)
+
+    if category_name:
+        products = products.filter(category__name__iexact=category_name)
+
+    if selected_brands:
+        products = products.filter(brand__name__in=selected_brands)  # 👈 Filter by brand list
+
+    categories = Category.objects.all()
+    brands = Products.objects.values_list('brand__name', flat=True).distinct()  # 👈 Get unique brand names
+
+    return render(request, 'Product_list.html', {
+        'cr': products,
+        'query': query,
+        'categories': categories,
+        'selected_category': category_name,
+        'brands': brands,
+        'selected_brands': selected_brands,  # 👈 Pass selected brands to template
+    })
 
 def reg(request):
     if request.method == "POST":
@@ -82,7 +106,11 @@ def checkout_single(request, product_id):
         messages.success(request, "The order is placed successfully!")
         return redirect('collections')  # Redirect after order placement
 
-    return render(request, 'checkout.html', {'total_price': product.price})
+    # Pass form_action_url for single product checkout
+    form_action_url = reverse('checkout_single', args=[product.id])
+
+    return render(request, 'checkout.html', {'total_price': product.price, 'product_id': product.id})
+
 
 @login_required
 def cart_view(request):
@@ -155,6 +183,13 @@ def purchase_history(request):
 @login_required
 def generate_invoice(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    print(f"Generating invoice for Order ID: {order.id}")
+    print(f"Number of order items: {order.order_items.count()}")
+
+    for item in order.order_items.all():
+        print(f"Item: {item.product.name}, Quantity: {item.quantity}, Price: {item.product.price}")
+
     
     # Create a response object for PDF
     response = HttpResponse(content_type='application/pdf')
@@ -178,6 +213,13 @@ def generate_invoice(request, order_id):
     p.drawString(50, height - 120, f"Purchase Date: {purchase_time}")  # Show purchase time
     p.drawString(50, height - 140, f"Invoice Generated: {invoice_time}")  # Show invoice time
     p.drawString(50, height - 160, f"Customer: {order.user.first_name} {order.user.last_name}")
+
+    # 🔍 Debugging - print order items to terminal
+    for item in order.order_items.all():
+        print("Item:", item.product.name)
+        print("Quantity:", item.quantity)
+        print("Price:", item.product.price)
+
 
     # Table headers
     p.setFont("Helvetica-Bold", 12)

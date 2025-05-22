@@ -1,0 +1,161 @@
+/* home.css */
+
+/* General Styles */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header (same as other pages) */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-icons a {
+    color: white;
+    font-size: 1.2em;
+    transition: color 0.3s;
+    text-decoration: none;
+}
+
+.header-icons a:hover {
+    color: #f0f0f0;
+}
+
+.header-icons input[type="text"] {
+    padding: 5px;
+    border: 1px solid #024950;
+    border-radius: 5px;
+}
+
+/* Hero Section */
+.hero {
+    background: url('/static/images/hero-background.jpg') no-repeat center center/cover;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    padding: 0 20px;
+    position: relative;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    z-index: 1;
+}
+
+.hero-content {
+    z-index: 2;
+}
+
+.hero h2 {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.5em;
+    margin-bottom: 30px;
+}
+
+.shop-now-button {
+    background-color: #ff5733;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.shop-now-button:hover {
+    background-color: #e64a19;
+    transform: scale(1.05);
+}
+
+/* Featured Categories */
+.featured-section {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.featured-section h2 {
+    color: #4CAF50;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.featured-categories {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.category-box {
+    background-color: white;
+    color: #4CAF50;
+    border: 2px solid #4CAF50;
+    padding: 20px 30px;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: default;
+    transition: all 0.3s ease;
+}
+
+.category-box:hover {
+    background-color: #4CAF50;
+    color: white;
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero h2 {
+        font-size: 2em;
+    }
+
+    .hero p {
+        font-size: 1.1em;
+    }
+
+    .shop-now-button {
+        font-size: 1em;
+        padding: 10px 20px;
+    }
+
+    .featured-categories {
+        flex-direction: column;
+        gap: 15px;
+    }
+}

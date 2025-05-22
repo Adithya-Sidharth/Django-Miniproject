@@ -29,24 +29,41 @@
     </header>
 
     <main>
-        <ul class="category-list">  
-            <li><a href="#">DSLR</a></li>
-            <li><a href="#">Mirrorless</a></li>
-            <li><a href="#">Point & Shoot</a></li>
-            <li><a href="#">Digital Cinema Camera</a></li>
+        <ul class="category-list">
+            <li><a href="{% url 'collections' %}">All</a></li> <!-- Optional "All" button -->
+    
+            {% for cat in categories %}
+                <li class="{% if cat.name == selected_category %}active-category{% endif %}">
+                    <a href="?category={{ cat.name }}">{{ cat.name }}</a>
+                </li>
+            {% endfor %}
         </ul>
+
 
         <div class="product-area">
             <aside class="sidebar">
                 <h2>Filters</h2>
                 <div class="filter-section">
                     <h3>Brands</h3>
-                    <!-- {% for i in br}
-                    <label><input type="checkbox"></label> -->
-                    <label><input type="checkbox"> Nikon</label>
-                    <label><input type="checkbox"> Canon</label>
-                    <label><input type="checkbox"> Sony</label>
+                    <form method="GET" id="brand-filter-form">
+                        {% if selected_category %}
+                            <input type="hidden" name="category" value="{{ selected_category }}">
+                        {% endif %}
+                        {% if query %}
+                            <input type="hidden" name="q" value="{{ query }}">
+                        {% endif %}
+
+                        {% for brand in brands %}
+                            <label>
+                                <input type="checkbox" name="brand" value="{{ brand }}" 
+                                    {% if brand in selected_brands %}checked{% endif %}
+                                    onchange="document.getElementById('brand-filter-form').submit();">
+                                {{ brand }}
+                            </label><br>
+                        {% endfor %}
+                    </form>
                 </div>
+
             </aside>
 
             <section class="product-list">

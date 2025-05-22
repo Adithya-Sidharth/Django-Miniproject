@@ -27,7 +27,7 @@
         <h2>Review Your Order</h2>
         <p>Total Amount: ${{ total_price }}</p>
 
-        <form action="{% url 'checkout' %}" method="POST" onsubmit="showSuccessMessage(event)">
+        <form action="{% if product_id %}{% url 'checkout_single' product_id %}{% else %}{% url 'checkout' %}{% endif %}" method="POST" onsubmit="showSuccessMessage(event)">
             {% csrf_token %}
             <label for="address">Shipping Address:</label>
             <textarea id="address" name="address" required></textarea>

@@ -192,6 +192,12 @@ button:hover {
     transform: scale(1.05); /* Slight scaling effect on hover */
 }
 
+.active-category a {
+    font-weight: bold;
+    color: #ff6600;
+    text-decoration: underline;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .category-list {
@@ -203,3 +209,4 @@ button:hover {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 }
+
